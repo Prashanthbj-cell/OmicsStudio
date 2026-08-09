@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heatmap Builder | OmicsStudio</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../css/main.css">
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+    <img src="../assets/logos/logo.png" alt="OmicsStudio">
+    <span>OmicsStudio</span>
+</div>
+
+<nav>
+<a href="../index.html">Home</a>
+<a href="#">Heatmap Builder</a>
+</nav>
+
+<button class="login" onclick="goBack()">Back</button>
+
+<script>
+function goBack(){
+
+    localStorage.removeItem("heatmapFileName");
+    localStorage.removeItem("heatmapData");
+
+    history.back();
+
+}
+</script>
+
+
+
+</header>
+
+<section class="builder">
+
+<div class="left-tools">
+
+<div class="tool-card">
+<h3>Dataset</h3>
+<p id="datasetName">
+Waiting for dataset...
+</p>
+</div>
+
+<div class="tool-card">
+<h3>Color Palette</h3>
+
+<label for="colorPalette">Color Palette:</label>
+
+<select id="colorPalette">
+
+    <optgroup label="Diverging">
+        <option value="RdBu" selected>Red - White - Blue</option>
+<option value="BlueWhiteRed">Blue - White - Red</option>
+<option value="RdYlBu">Red - Yellow - Blue</option>
+<option value="BlueYellowRed">Bright Blue - Yellow - Red</option>
+<option value="GreenWhiteRed">Green - White - Red</option>
+<option value="PurpleWhiteOrange">Purple - White - Orange</option>
+<option value="PinkGreen">Pink - White - Green</option>
+<option value="MagentaGreen">Magenta - White - Green</option>
+<option value="TealOrange">Teal - White - Orange</option>
+<option value="VioletOrange">Violet - White - Orange</option>
+<option value="RedCyan">Red - White - Cyan</option>
+<option value="YlOrRd">Yellow - Orange - Red</option>
+<option value="YlGnBu">Yellow - Green - Blue</option>
+
+
+<optgroup label="Bicolor">
+<option value="Blues">Light - Dark Blue</option>
+<option value="Greens">Light - Dark Green</option>
+<option value="Reds">Light - Dark Red</option>
+<option value="Purples">Light - Dark Purple</option>
+<option value="Oranges">Light - Dark Orange</option>
+<option value="Teals">Light - Dark Teal</option>
+<option value="GnBu">Green - Blue</option>
+<option value="BuGn">Blue - Green</option>
+<option value="PuBu">Purple - Blue</option>
+<option value="PuRd">Purple - Red</option>
+<option value="OrRd">Orange - Red</option>
+<option value="BuPu">Blue - Purple</option>
+    
+
+    <optgroup label="Sequential">
+        <option value="Viridis">Viridis</option>
+        <option value="Plasma">Plasma</option>
+        <option value="Inferno">Inferno</option>
+        <option value="Magma">Magma</option>
+        <option value="Cividis">Cividis</option>
+        <option value="Blues">Blues</option>
+        <option value="Greens">Greens</option>
+        <option value="Reds">Reds</option>
+        <option value="Purples">Purples</option>
+        <option value="Oranges">Oranges</option>
+        <option value="Spectral">Spectral</option>
+<option value="Rainbow">Rainbow</option>
+<option value="Fire">Fire</option>
+<option value="Ice">Ice</option>
+<option value="Sunset">Sunset</option>
+<option value="Neon">Neon</option>
+    </optgroup>
+
+</select>
+
+</div>
+
+<div class="tool-card">
+    <label for="heatmapType">Heatmap Type</label>
+
+    <select id="heatmapType">
+        <option value="standard" selected>Standard Heatmap</option>
+        <option value="circle">Circle Heatmap</option>
+        <option value="bubble">Bubble Heatmap</option>
+        <option value="triangular">Triangular Heatmap</option>
+    </select>
+</div>
+
+<div class="tool-card">
+<h3>Scaling</h3>
+
+<select id="scalingOption">
+    <option value="none">None</option>
+    <option value="row">Row Z-score</option>
+    <option value="column">Column Z-score</option>
+</select>
+
+</div>
+<div class="tool-card">
+
+<h3>Clustering</h3>
+
+<select id="clusterOption">
+    <option value="none">No Clustering</option>
+    <option value="row">Hierarchical — Rows</option>
+    <option value="column">Hierarchical — Columns</option>
+    <option value="both">Hierarchical — Rows + Columns</option>
+</select>
+
+<label for="distanceOption">Distance:</label>
+
+<select id="distanceOption">
+    <option value="euclidean">Euclidean</option>
+    <option value="manhattan">Manhattan</option>
+    <option value="correlation">Pearson Correlation</option>
+</select>
+
+
+<label for="linkageOption">Linkage:</label>
+
+<select id="linkageOption">
+    <option value="average">Average</option>
+    <option value="complete">Complete</option>
+    <option value="single">Single</option>
+</select>
+
+<label for="groupLabelRotation">Group Label Rotation</label>
+
+<select id="groupLabelRotation">
+    <option value="0">0° — Horizontal</option>
+    <option value="-45">-45° — Slanted</option>
+    <option value="-90">-90° — Vertical</option>
+    <option value="45">45° — Slanted</option>
+    <option value="90">90° — Vertical</option>
+</select>
+</div>
+
+</div>
+
+<div class="viewer">
+
+    <div class="viewer-toolbar">
+
+    <button onclick="zoomIn()">Zoom +</button>
+    <button onclick="zoomOut()">Zoom -</button>
+    <button onclick="resetZoom()">Reset</button>
+
+    
+    <span>Width:</span>
+
+<input
+type="number"
+id="heatmapWidth"
+value="900"
+min="100"
+max="2000"
+onkeydown="if(event.key==='Enter') resizeHeatmap()"
+>
+
+<span>px</span>
+
+<span>Height:</span>
+
+<input
+    type="number"
+    id="heatmapHeight"
+    value="650"
+    min="100"
+    max="3000"
+onkeydown="if(event.key==='Enter') resizeHeatmap()"
+
+>
+
+<span>px</span>
+
+<span>Font:</span>
+
+<input
+    type="number"
+    id="FontSize"
+    value="12"
+    min="6"
+    max="30"
+    step="1"
+>
+
+<span>px</span>
+
+    <span class="download-label">Download:</span>
+
+    <button onclick="downloadHeatmap('png')">PNG</button>
+    <button onclick="downloadHeatmap('svg')">SVG</button>
+    <button onclick="downloadHeatmap('pdf')">PDF</button>
+
+</div>
+
+<div id="heatmapPlot"></div>
+
+</div>
+
+<div id="heatmapPlot">
+</div>
+
+</div>
+
+</section>
+
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/svg2pdf.js/2.2.2/svg2pdf.umd.min.js"></script>
+
+<script src="../js/core/heatmap-builder.js"></script>
+
+
+</body>
+
+</html>
+

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Heatmap Studio | OmicsStudio</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../css/main.css">
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+    <img src="../assets/logos/logo.png" alt="OmicsStudio">
+    <span>OmicsStudio</span>
+</div>
+
+<nav>
+
+<a href="../index.html">Home</a>
+<a href="#">Heatmap Studio</a>
+
+</nav>
+
+<div class="nav-buttons">
+
+<button class="login">
+
+Back
+
+</button>
+
+</div>
+
+</header>
+
+
+
+<section class="heatmap-page">
+
+<div class="page-title">
+
+<h1>🔥 Heatmap Studio</h1>
+
+<p>
+Create publication-quality clustered heatmaps for Proteomics,
+Metabolomics, Transcriptomics and Genomics.
+</p>
+
+</div>
+
+
+
+<div class="dashboard">
+
+<!-- LEFT PANEL -->
+
+<div class="left-panel">
+
+<div class="card">
+
+<h2>📁 Upload Dataset</h2>
+
+<div class="upload-area">
+
+<div class="upload-icon">
+📂
+</div>
+
+<p>
+Drag & Drop CSV / Excel
+</p>
+
+<input
+    type="file"
+    id="fileInput"
+    accept=".csv,.xlsx"
+    hidden
+>
+
+<button
+    type="button"
+    class="primary"
+    id="browseBtn">
+    📂 Browse Files
+</button>
+
+<div class="paste-section">
+
+    <p>or paste your data directly</p>
+
+    <textarea
+        id="pasteData"
+        placeholder="Copy and paste your Excel data here..."
+    ></textarea>
+
+    <button id="loadPasteBtn">
+        📋 Load Pasted Data
+    </button>
+
+</div>
+</div>
+
+<hr>
+
+<button class="secondary demo-btn">
+
+🧪 Try Demo Dataset
+
+</button>
+
+</div>
+
+
+
+
+<div class="card">
+
+<h2>🕒 Recent Projects</h2>
+
+<ul class="recent-list">
+
+<li>PCOS Plasma Study</li>
+
+<li>Breast Cancer Panel</li>
+
+<li>Metabolomics Demo</li>
+
+<li>Proteomics Test</li>
+
+</ul>
+
+</div>
+
+</div>
+
+
+
+
+
+<!-- RIGHT PANEL -->
+
+<div class="right-panel">
+
+<div class="card dataset-card">
+
+<h2>Dataset Information</h2>
+
+<div class="dataset-info">
+
+<div>
+    <strong>Rows</strong>
+    <p id="rowsCount">0</p>
+</div>
+
+<div>
+    <strong>Columns</strong>
+    <p id="columnsCount">0</p>
+</div>
+
+<div>
+    <strong>Missing Values</strong>
+    <p id="missingCount">0</p>
+</div>
+
+<div>
+    <strong>Status</strong>
+    <p id="statusText">Waiting...</p>
+</div>
+
+
+</div>
+
+</div>
+
+
+
+
+<div class="card preview-card">
+
+<h2>Dataset Preview</h2>
+
+<div class="preview-table">
+
+<table>
+
+<thead id="previewHead">
+
+<tr>
+
+<th>Protein</th>
+
+<th>Sample 1</th>
+
+<th>Sample 2</th>
+
+<th>Sample 3</th>
+
+</tr>
+
+</thead>
+
+<tbody id="previewBody">
+
+<tr>
+
+<td colspan="4">
+
+Waiting for dataset...
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+
+
+<div class="continue-section">
+
+   <a onclick="openBuilder()" class="generate-btn">
+Continue →
+
+</a>
+<script>
+
+</script>
+
+
+</div>
+
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+
+<script src="../js/core/heatmap.js"></script>
+
+
+
+</body>
+</html> 
