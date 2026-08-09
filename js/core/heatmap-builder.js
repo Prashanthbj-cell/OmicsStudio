@@ -1832,17 +1832,10 @@ const layout = {
 
 
     margin: {
-
-    // More room between dendrogram and gene names
-    l: hasRow ? 35 : 180,
-
+    l: hasRow ? 45 : 180,
     r: 20,
-
-    // Smaller top margin
-    t: hasColumn ? 70 : 40,
-
-    b: 120
-
+    t: hasColumn ? 55 : 40,
+    b: 10
 },
 
         // -------------------------------
@@ -1917,10 +1910,12 @@ const layout = {
 
     side: "bottom",
 
+    ticklabelstandoff: -5,
+
     showticklabels: true,
 
   tickfont: {
-    size: Number(FontSize) || 12,
+    size: FontSize,
     family: "Arial"
 }, 
 
@@ -3286,57 +3281,56 @@ function applyGeneFontSize() {
     const plot =
         document.getElementById("heatmapPlot");
 
-
-    if (!input) {
+    if (!input || !plot) {
         return;
     }
 
-
     const size =
         parseInt(input.value, 10);
-
 
     if (
         !Number.isFinite(size) ||
         size < 6 ||
         size > 50
     ) {
-
         alert(
-            "Gene font size must be between 6 and 50."
+            "Font size must be between 6 and 50."
         );
-
         return;
     }
 
-
     FontSize = size;
-
 
     localStorage.setItem(
         "FontSize",
         FontSize
     );
 
-
-    if (plot && plot.data) {
+    if (plot.data) {
 
         Plotly.relayout(
             plot,
             {
+                // Gene names
                 "yaxis2.tickfont.size":
                     FontSize,
 
                 "yaxis2.tickfont.family":
+                    "Arial",
+
+                // Group/sample names
+                "xaxis2.tickfont.size":
+                    FontSize,
+
+                "xaxis2.tickfont.family":
                     "Arial"
             }
         );
 
     }
 
-
     console.log(
-        "Gene font:",
+        "Font size:",
         FontSize
     );
 }

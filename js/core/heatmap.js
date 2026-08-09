@@ -16,6 +16,7 @@ function loadCSV(event){
 
 
     localStorage.setItem("heatmapFileName", file.name);
+    localStorage.setItem("heatmapDataType", "user");
 
 
     Papa.parse(file,{
@@ -220,17 +221,61 @@ function drawHeatmap(data) {
 
 function openBuilder() {
 
-    const file = localStorage.getItem("heatmapFileName");
+    const storedData =
+        localStorage.getItem("heatmapData");
 
-    if (!file) {
-        alert("Please upload dataset first");
+    const fileName =
+        localStorage.getItem("heatmapFileName");
+
+    const dataType =
+        localStorage.getItem("heatmapDataType");
+
+    console.log("========== OPEN BUILDER ==========");
+    console.log("storedData:", storedData);
+    console.log("fileName:", fileName);
+    console.log("dataType:", dataType);
+
+
+    if (!storedData || !fileName) {
+
+        alert(
+            "Please upload a dataset, paste your data, or click 'Try Demo Dataset'."
+        );
+
         return;
     }
 
-    window.location.href = "../pages/heatmap-builder.html";
+
+    try {
+
+        const data = JSON.parse(storedData);
+
+        if (!Array.isArray(data) || data.length < 2) {
+
+            alert(
+                "Please upload or paste a valid dataset."
+            );
+
+            return;
+        }
+
+        console.log("Dataset valid.");
+        console.log("Rows:", data.length);
+        console.log("Columns:", data[0].length);
+
+        window.location.href =
+            "heatmap-builder.html";
+
+    } catch (error) {
+
+        console.error("Dataset error:", error);
+
+        alert(
+            "The dataset is invalid. Please upload or paste it again."
+        );
+    }
 }
 
-// Make function available to HTML onclick
 window.openBuilder = openBuilder;
 
 // =======================================
@@ -277,9 +322,143 @@ if (loadPasteBtn && pasteData) {
             "Pasted Dataset"
         );
 
+        localStorage.setItem(
+    "heatmapDataType",
+    "user"
+);
+
         // Update preview
         updateDashboard(rows);
 
     });
 
 }
+
+// =======================================
+// DEMO DATASET
+// =======================================
+
+const demoData = [
+    ["Gene", "Control", "Control", "Treatment", "Treatment", "Disease", "Disease"],
+
+    ["TP53", 2.1, 2.4, 5.8, 6.1, 1.2, 1.5],
+    ["BRCA1", 3.5, 3.2, 1.8, 2.0, 6.2, 6.5],
+    ["EGFR", 1.4, 1.7, 4.9, 5.2, 7.1, 6.8],
+    ["MYC", 6.2, 6.5, 2.1, 2.4, 5.8, 6.0],
+    ["AKT1", 2.8, 3.0, 5.4, 5.7, 1.9, 2.1],
+    ["PTEN", 5.9, 6.1, 2.3, 2.5, 1.4, 1.7],
+    ["ESR1", 1.8, 2.0, 6.1, 6.4, 3.2, 3.5],
+    ["VEGFA", 4.7, 4.9, 2.2, 2.5, 6.4, 6.7],
+    ["CDK2", 2.5, 2.7, 5.1, 5.4, 3.0, 3.2],
+    ["MMP9", 1.6, 1.9, 4.8, 5.0, 6.8, 7.0]
+];
+
+
+// =======================================
+// TRY DEMO DATASET
+// =======================================
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const demoDatasetBtn = document.querySelector(".demo-btn");
+
+    console.log("demoDatasetBtn:", demoDatasetBtn);
+
+    if (!demoDatasetBtn) {
+        console.error("ERROR: .demo-btn was not found!");
+        return;
+    }
+
+    console.log("demoDatasetBtn found ✓");
+
+    demoDatasetBtn.addEventListener("click", function () {
+
+        console.log("TRY DEMO DATASET CLICKED");
+
+        localStorage.setItem(
+            "heatmapData",
+            JSON.stringify(demoData)
+        );
+
+        localStorage.setItem(
+            "heatmapFileName",
+            "OmicsStudio Demo Dataset"
+        );
+
+        localStorage.setItem(
+            "heatmapDataType",
+            "demo"
+        );
+
+        console.log("DEMO DATA SAVED ✓");
+
+        // Open heatmap builder
+        window.location.href = "heatmap-builder.html";
+
+    });
+
+});
+
+
+// =======================================
+// DOWNLOAD DEMO DATASET AS CSV
+// =======================================
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const downloadDemoBtn =
+        document.getElementById("downloadDemoBtn");
+
+    if (!downloadDemoBtn) {
+        console.error("ERROR: #downloadDemoBtn was not found!");
+        return;
+    }
+
+    downloadDemoBtn.addEventListener("click", function () {
+
+        console.log("DOWNLOAD DEMO CSV CLICKED");
+
+        const csv = demoData
+            .map(row =>
+                row.map(value => `"${value}"`).join(",")
+            )
+            .join("\n");
+
+        const blob = new Blob(
+            [csv],
+            { type: "text/csv;charset=utf-8;" }
+        );
+
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+
+        link.href = url;
+        link.download =
+            "OmicsStudio_Demo_Heatmap_Dataset.csv";
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        document.body.removeChild(link);
+
+        URL.revokeObjectURL(url);
+
+        console.log("DEMO CSV DOWNLOADED ✓");
+
+    });
+
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const backBtn = document.getElementById("heatmapBackBtn");
+
+    if (backBtn) {
+        backBtn.addEventListener("click", function () {
+            window.history.back();
+        });
+    }
+
+});
