@@ -2401,9 +2401,9 @@ function downloadHeatmap(format) {
 
         filename: "OmicsStudio_Heatmap",
 
-        width: 4000,
+        width: width,
 
-        height: 3000,
+        height: height,
 
         scale: 4
 
@@ -2426,9 +2426,9 @@ function downloadHeatmap(format) {
             filename:
                 "OmicsStudio_Heatmap",
 
-            width: 3000,
+            width: width,
 
-            height: 2200,
+            height: height,
 
             scale: 1
 
@@ -2448,9 +2448,9 @@ function downloadHeatmap(format) {
 
         format: "png",
 
-        width: 3000,
+        width: width,
 
-        height: 2200,
+        height: height,
 
         scale: 4
 
