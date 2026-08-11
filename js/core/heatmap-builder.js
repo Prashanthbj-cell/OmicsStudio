@@ -2376,7 +2376,7 @@ function downloadHeatmap(format) {
 
 let fileName = prompt(
     "Enter file name:",
-    "OmicsStudio_Heatmap"
+    ""
 );
 
 // Cancel
@@ -2429,7 +2429,7 @@ fileName = fileName.replace(
 
         format: "png",
 
-        filename: "OmicsStudio_Heatmap",
+        filename: "fileName",
 
         width: width,
 
@@ -2454,7 +2454,7 @@ fileName = fileName.replace(
             format: "svg",
 
             filename:
-                "OmicsStudio_Heatmap",
+                "fileName",
 
             width: width,
 
@@ -2516,7 +2516,7 @@ fileName = fileName.replace(
         );
 
         pdf.save(
-            "OmicsStudio_Heatmap.pdf"
+            "filename"
         );
 
     });
