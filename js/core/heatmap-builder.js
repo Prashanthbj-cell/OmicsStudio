@@ -2370,25 +2370,7 @@ if (heatmapTypeSelect) {
 
 function downloadHeatmap(format) {
 
-    const plot =
-        document.getElementById("heatmapPlot");
-
-    if (!plot || !plot.data) {
-        alert("Heatmap is not available.");
-        return;
-    }
-
-    const width = plot.offsetWidth;
-    const height = plot.offsetHeight;
-
-    console.log(
-        "Download:",
-        format,
-        width,
-        height
-    );
-
-    // =======================================
+        // =======================================
 // ASK FOR FILE NAME
 // =======================================
 
@@ -2415,6 +2397,26 @@ fileName = fileName.replace(
     /\.(png|svg|pdf)$/i,
     ""
 );
+
+    const plot =
+        document.getElementById("heatmapPlot");
+
+    if (!plot || !plot.data) {
+        alert("Heatmap is not available.");
+        return;
+    }
+
+    const width = plot.offsetWidth;
+    const height = plot.offsetHeight;
+
+    console.log(
+        "Download:",
+        format,
+        width,
+        height
+    );
+
+
 
 
     // ===============================
