@@ -2388,6 +2388,34 @@ function downloadHeatmap(format) {
         height
     );
 
+    // =======================================
+// ASK FOR FILE NAME
+// =======================================
+
+let fileName = prompt(
+    "Enter file name:",
+    "OmicsStudio_Heatmap"
+);
+
+// Cancel
+if (fileName === null) {
+    return;
+}
+
+// Remove extra spaces
+fileName = fileName.trim();
+
+// Empty name
+if (!fileName) {
+    fileName = "OmicsStudio_Heatmap";
+}
+
+// Remove extension if user entered one
+fileName = fileName.replace(
+    /\.(png|svg|pdf)$/i,
+    ""
+);
+
 
     // ===============================
     // PNG
