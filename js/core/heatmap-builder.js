@@ -2329,7 +2329,7 @@ if (heatmapTypeSelect) {
 // Heatmap Download
 // =======================================
 
-function downloadHeatmap(format) {
+async function downloadHeatmap(format) {
 
     const plot = document.getElementById("heatmapPlot");
 
@@ -2339,17 +2339,147 @@ function downloadHeatmap(format) {
     }
 
     // =======================================
-    // HIGH-RESOLUTION EXPORT SIZE
+    // EXPORT SIZE
     // =======================================
 
     const exportWidth = 4000;
     const exportHeight = 3000;
 
-    console.log(
-        "Download:",
-        format,
-        exportWidth,
-        exportHeight
+    // =======================================
+    // SAVE ORIGINAL LAYOUT
+    // =======================================
+
+    const originalLayout = JSON.parse(
+        JSON.stringify(plot.layout)
+    );
+
+    // =======================================
+    // SCALE FACTOR
+    // =======================================
+
+    const screenWidth = plot.offsetWidth || 1000;
+
+    const fontScale =
+        Math.max(1, exportWidth / screenWidth);
+
+    // Limit font scaling so fonts don't become enormous
+    const fontMultiplier =
+        Math.min(fontScale, 3);
+
+    // =======================================
+    // EXPORT FONT SIZES
+    // =======================================
+
+    const originalFont =
+        originalLayout.font?.size || 12;
+
+    const originalXAxisFont =
+        originalLayout.xaxis?.tickfont?.size ||
+        originalFont;
+
+    const originalYAxisFont =
+        originalLayout.yaxis?.tickfont?.size ||
+        originalFont;
+
+
+    // =======================================
+    // CREATE EXPORT LAYOUT
+    // =======================================
+
+    const exportLayout = {
+
+        ...originalLayout,
+
+        width: exportWidth,
+        height: exportHeight,
+
+        // -----------------------------------
+        // General font
+        // -----------------------------------
+
+        font: {
+            ...originalLayout.font,
+            size: Math.round(
+                originalFont * fontMultiplier
+            )
+        },
+
+        // -----------------------------------
+        // X-axis
+        // -----------------------------------
+
+        xaxis: {
+
+            ...originalLayout.xaxis,
+
+            tickfont: {
+
+                ...originalLayout.xaxis?.tickfont,
+
+                size: Math.round(
+                    originalXAxisFont *
+                    fontMultiplier
+                )
+            }
+        },
+
+        // -----------------------------------
+        // Y-axis / Gene names
+        // -----------------------------------
+
+        yaxis: {
+
+            ...originalLayout.yaxis,
+
+            tickfont: {
+
+                ...originalLayout.yaxis?.tickfont,
+
+                size: Math.round(
+                    originalYAxisFont *
+                    fontMultiplier
+                )
+            }
+        },
+
+        // -----------------------------------
+        // Larger margins
+        // -----------------------------------
+
+        margin: {
+
+            ...originalLayout.margin,
+
+            l: Math.max(
+                originalLayout.margin?.l || 80,
+                220
+            ),
+
+            r: Math.max(
+                originalLayout.margin?.r || 80,
+                180
+            ),
+
+            t: Math.max(
+                originalLayout.margin?.t || 80,
+                150
+            ),
+
+            b: Math.max(
+                originalLayout.margin?.b || 80,
+                220
+            )
+        }
+    };
+
+
+    // =======================================
+    // APPLY TEMPORARY EXPORT LAYOUT
+    // =======================================
+
+    await Plotly.relayout(
+        plot,
+        exportLayout
     );
 
 
@@ -2359,21 +2489,19 @@ function downloadHeatmap(format) {
 
     if (format === "png") {
 
-        Plotly.downloadImage(plot, {
+        await Plotly.downloadImage(plot, {
 
             format: "png",
 
-            filename: "OmicsStudio_Heatmap",
+            filename:
+                "OmicsStudio_Heatmap",
 
             width: exportWidth,
 
             height: exportHeight,
 
-            scale: 3
-
+            scale: 2
         });
-
-        return;
     }
 
 
@@ -2381,21 +2509,19 @@ function downloadHeatmap(format) {
     // SVG
     // =======================================
 
-    if (format === "svg") {
+    else if (format === "svg") {
 
-        Plotly.downloadImage(plot, {
+        await Plotly.downloadImage(plot, {
 
             format: "svg",
 
-            filename: "OmicsStudio_Heatmap",
+            filename:
+                "OmicsStudio_Heatmap",
 
             width: exportWidth,
 
             height: exportHeight
-
         });
-
-        return;
     }
 
 
@@ -2403,57 +2529,73 @@ function downloadHeatmap(format) {
     // PDF
     // =======================================
 
-    if (format === "pdf") {
+    else if (format === "pdf") {
 
-        Plotly.toImage(plot, {
+        const imageData =
+            await Plotly.toImage(plot, {
 
-            format: "png",
+                format: "png",
 
-            width: exportWidth,
+                width: exportWidth,
 
-            height: exportHeight,
+                height: exportHeight,
 
-            scale: 3
+                scale: 2
+            });
 
-        }).then(function(imageData) {
 
-            const jsPDF =
-                window.jspdf.jsPDF;
+        const jsPDF =
+            window.jspdf.jsPDF;
 
-            const pdf =
-                new jsPDF({
 
-                    orientation:
-                        exportWidth > exportHeight
-                            ? "landscape"
-                            : "portrait",
+        const pdf =
+            new jsPDF({
 
-                    unit: "px",
+                orientation:
+                    exportWidth > exportHeight
+                        ? "landscape"
+                        : "portrait",
 
-                    format: [
-                        exportWidth,
-                        exportHeight
-                    ]
+                unit: "px",
 
-                });
+                format: [
+                    exportWidth,
+                    exportHeight
+                ]
+            });
 
-            pdf.addImage(
-                imageData,
-                "PNG",
-                0,
-                0,
-                exportWidth,
-                exportHeight
-            );
 
-            pdf.save(
-                "OmicsStudio_Heatmap.pdf"
-            );
+        pdf.addImage(
 
-        });
+            imageData,
 
-        return;
+            "PNG",
+
+            0,
+
+            0,
+
+            exportWidth,
+
+            exportHeight
+        );
+
+
+        pdf.save(
+            "OmicsStudio_Heatmap.pdf"
+        );
     }
+
+
+    // =======================================
+    // RESTORE ORIGINAL HEATMAP
+    // =======================================
+
+    await Plotly.react(
+        plot,
+        plot.data,
+        originalLayout
+    );
 
 }
 
