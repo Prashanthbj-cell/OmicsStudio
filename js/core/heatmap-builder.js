@@ -2331,67 +2331,45 @@ if (heatmapTypeSelect) {
 
 function downloadHeatmap(format) {
 
-    const plot =
-        document.getElementById("heatmapPlot");
+    const plot = document.getElementById("heatmapPlot");
 
     if (!plot || !plot.data) {
         alert("Heatmap is not available.");
         return;
     }
 
-    const width = plot.offsetWidth;
-    const height = plot.offsetHeight;
+    // =======================================
+    // HIGH-RESOLUTION EXPORT SIZE
+    // =======================================
+
+    const exportWidth = 4000;
+    const exportHeight = 3000;
 
     console.log(
         "Download:",
         format,
-        width,
-        height
+        exportWidth,
+        exportHeight
     );
 
 
-    // ===============================
+    // =======================================
     // PNG
-    // ===============================
+    // =======================================
 
     if (format === "png") {
 
-    Plotly.downloadImage(plot, {
-
-        format: "png",
-
-        filename: "OmicsStudio_Heatmap",
-
-        width: width,
-
-        height: height,
-
-        scale: 4
-
-    });
-
-    return;
-}
-
-
-    // ===============================
-    // SVG
-    // ===============================
-
-    if (format === "svg") {
-
         Plotly.downloadImage(plot, {
 
-            format: "svg",
+            format: "png",
 
-            filename:
-                "OmicsStudio_Heatmap",
+            filename: "OmicsStudio_Heatmap",
 
-            width: width,
+            width: exportWidth,
 
-            height: height,
+            height: exportHeight,
 
-            scale: 1
+            scale: 3
 
         });
 
@@ -2399,62 +2377,85 @@ function downloadHeatmap(format) {
     }
 
 
-    // ===============================
+    // =======================================
+    // SVG
+    // =======================================
+
+    if (format === "svg") {
+
+        Plotly.downloadImage(plot, {
+
+            format: "svg",
+
+            filename: "OmicsStudio_Heatmap",
+
+            width: exportWidth,
+
+            height: exportHeight
+
+        });
+
+        return;
+    }
+
+
+    // =======================================
     // PDF
-    // ===============================
+    // =======================================
 
     if (format === "pdf") {
 
-    Plotly.toImage(plot, {
+        Plotly.toImage(plot, {
 
-        format: "png",
+            format: "png",
 
-        width: width,
+            width: exportWidth,
 
-        height: height,
+            height: exportHeight,
 
-        scale: 4
+            scale: 3
 
-    }).then(function(imageData) {
+        }).then(function(imageData) {
 
-        const jsPDF =
-            window.jspdf.jsPDF;
+            const jsPDF =
+                window.jspdf.jsPDF;
 
-        const pdf =
-            new jsPDF({
+            const pdf =
+                new jsPDF({
 
-                orientation:
-                    width > height
-                        ? "landscape"
-                        : "portrait",
+                    orientation:
+                        exportWidth > exportHeight
+                            ? "landscape"
+                            : "portrait",
 
-                unit: "px",
+                    unit: "px",
 
-                format: [
-                    width,
-                    height
-                ]
+                    format: [
+                        exportWidth,
+                        exportHeight
+                    ]
 
-            });
+                });
 
-        pdf.addImage(
-            imageData,
-            "PNG",
-            0,
-            0,
-            width,
-            height
-        );
+            pdf.addImage(
+                imageData,
+                "PNG",
+                0,
+                0,
+                exportWidth,
+                exportHeight
+            );
 
-        pdf.save(
-            "OmicsStudio_Heatmap.pdf"
-        );
+            pdf.save(
+                "OmicsStudio_Heatmap.pdf"
+            );
 
-    });
+        });
 
-    return;
-}   
+        return;
+    }
 
+}
 
 
 
@@ -2948,7 +2949,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
-})};
+});
 
 // =======================================
 // MAKE HTML FUNCTIONS GLOBAL
