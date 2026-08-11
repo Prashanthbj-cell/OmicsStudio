@@ -271,6 +271,45 @@ const colorPalettes = {
     // SEQUENTIAL PALETTES
     // ==========================================
 
+    Viridis: [
+    [0, "#440154"],
+    [0.25, "#3B528B"],
+    [0.5, "#21918C"],
+    [0.75, "#5EC962"],
+    [1, "#FDE725"]
+],
+
+Plasma: [
+    [0, "#0D0887"],
+    [0.25, "#7E03A8"],
+    [0.5, "#CC4778"],
+    [0.75, "#F89540"],
+    [1, "#F0F921"]
+],
+
+Inferno: [
+    [0, "#000004"],
+    [0.25, "#420A68"],
+    [0.5, "#932667"],
+    [0.75, "#ED6925"],
+    [1, "#FCFFA4"]
+],
+
+Magma: [
+    [0, "#000004"],
+    [0.25, "#3B0F70"],
+    [0.5, "#8C2981"],
+    [0.75, "#DE4968"],
+    [1, "#FCFDBF"]
+],
+
+Cividis: [
+    [0, "#00204C"],
+    [0.25, "#414A6B"],
+    [0.5, "#7C7B78"],
+    [0.75, "#B6A96E"],
+    [1, "#FDE737"]
+],
     
     Blues: [
         [0, "#E6F0FF"],
@@ -2329,275 +2368,132 @@ if (heatmapTypeSelect) {
 // Heatmap Download
 // =======================================
 
-async function downloadHeatmap(format) {
+function downloadHeatmap(format) {
 
-    const plot = document.getElementById("heatmapPlot");
+    const plot =
+        document.getElementById("heatmapPlot");
 
     if (!plot || !plot.data) {
         alert("Heatmap is not available.");
         return;
     }
 
-    // =======================================
-    // EXPORT SIZE
-    // =======================================
+    const width = plot.offsetWidth;
+    const height = plot.offsetHeight;
 
-    const exportWidth = 4000;
-    const exportHeight = 3000;
-
-    // =======================================
-    // SAVE ORIGINAL LAYOUT
-    // =======================================
-
-    const originalLayout = JSON.parse(
-        JSON.stringify(plot.layout)
-    );
-
-    // =======================================
-    // SCALE FACTOR
-    // =======================================
-
-    const screenWidth = plot.offsetWidth || 1000;
-
-    const fontScale =
-        Math.max(1, exportWidth / screenWidth);
-
-    // Limit font scaling so fonts don't become enormous
-    const fontMultiplier =
-        Math.min(fontScale, 3);
-
-    // =======================================
-    // EXPORT FONT SIZES
-    // =======================================
-
-    const originalFont =
-        originalLayout.font?.size || 12;
-
-    const originalXAxisFont =
-        originalLayout.xaxis?.tickfont?.size ||
-        originalFont;
-
-    const originalYAxisFont =
-        originalLayout.yaxis?.tickfont?.size ||
-        originalFont;
-
-
-    // =======================================
-    // CREATE EXPORT LAYOUT
-    // =======================================
-
-    const exportLayout = {
-
-        ...originalLayout,
-
-        width: exportWidth,
-        height: exportHeight,
-
-        // -----------------------------------
-        // General font
-        // -----------------------------------
-
-        font: {
-            ...originalLayout.font,
-            size: Math.round(
-                originalFont * fontMultiplier
-            )
-        },
-
-        // -----------------------------------
-        // X-axis
-        // -----------------------------------
-
-        xaxis: {
-
-            ...originalLayout.xaxis,
-
-            tickfont: {
-
-                ...originalLayout.xaxis?.tickfont,
-
-                size: Math.round(
-                    originalXAxisFont *
-                    fontMultiplier
-                )
-            }
-        },
-
-        // -----------------------------------
-        // Y-axis / Gene names
-        // -----------------------------------
-
-        yaxis: {
-
-            ...originalLayout.yaxis,
-
-            tickfont: {
-
-                ...originalLayout.yaxis?.tickfont,
-
-                size: Math.round(
-                    originalYAxisFont *
-                    fontMultiplier
-                )
-            }
-        },
-
-        // -----------------------------------
-        // Larger margins
-        // -----------------------------------
-
-        margin: {
-
-            ...originalLayout.margin,
-
-            l: Math.max(
-                originalLayout.margin?.l || 80,
-                220
-            ),
-
-            r: Math.max(
-                originalLayout.margin?.r || 80,
-                180
-            ),
-
-            t: Math.max(
-                originalLayout.margin?.t || 80,
-                150
-            ),
-
-            b: Math.max(
-                originalLayout.margin?.b || 80,
-                220
-            )
-        }
-    };
-
-
-    // =======================================
-    // APPLY TEMPORARY EXPORT LAYOUT
-    // =======================================
-
-    await Plotly.relayout(
-        plot,
-        exportLayout
+    console.log(
+        "Download:",
+        format,
+        width,
+        height
     );
 
 
-    // =======================================
+    // ===============================
     // PNG
-    // =======================================
+    // ===============================
 
     if (format === "png") {
 
-        await Plotly.downloadImage(plot, {
+    Plotly.downloadImage(plot, {
 
-            format: "png",
+        format: "png",
 
-            filename:
-                "OmicsStudio_Heatmap",
+        filename: "OmicsStudio_Heatmap",
 
-            width: exportWidth,
+        width: width,
 
-            height: exportHeight,
+        height: height,
 
-            scale: 2
-        });
-    }
+        scale: 4
+
+    });
+
+    return;
+}
 
 
-    // =======================================
+    // ===============================
     // SVG
-    // =======================================
+    // ===============================
 
-    else if (format === "svg") {
+    if (format === "svg") {
 
-        await Plotly.downloadImage(plot, {
+        Plotly.downloadImage(plot, {
 
             format: "svg",
 
             filename:
                 "OmicsStudio_Heatmap",
 
-            width: exportWidth,
+            width: width,
 
-            height: exportHeight
+            height: height,
+
+            scale: 1
+
         });
+
+        return;
     }
 
 
-    // =======================================
+    // ===============================
     // PDF
-    // =======================================
+    // ===============================
 
-    else if (format === "pdf") {
+    if (format === "pdf") {
 
-        const imageData =
-            await Plotly.toImage(plot, {
+    Plotly.toImage(plot, {
 
-                format: "png",
+        format: "png",
 
-                width: exportWidth,
+        width: width,
 
-                height: exportHeight,
+        height: height,
 
-                scale: 2
-            });
+        scale: 4
 
+    }).then(function(imageData) {
 
         const jsPDF =
             window.jspdf.jsPDF;
-
 
         const pdf =
             new jsPDF({
 
                 orientation:
-                    exportWidth > exportHeight
+                    width > height
                         ? "landscape"
                         : "portrait",
 
                 unit: "px",
 
                 format: [
-                    exportWidth,
-                    exportHeight
+                    width,
+                    height
                 ]
+
             });
 
-
         pdf.addImage(
-
             imageData,
-
             "PNG",
-
             0,
-
             0,
-
-            exportWidth,
-
-            exportHeight
+            width,
+            height
         );
-
 
         pdf.save(
             "OmicsStudio_Heatmap.pdf"
         );
-    }
 
+    });
 
-    // =======================================
-    // RESTORE ORIGINAL HEATMAP
-    // =======================================
+    return;
+}   
 
-    await Plotly.react(
-        plot,
-        plot.data,
-        originalLayout
-    );
-
-}
 
 
 
@@ -3091,7 +2987,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
-});
+})};
 
 // =======================================
 // MAKE HTML FUNCTIONS GLOBAL
