@@ -2370,39 +2370,8 @@ if (heatmapTypeSelect) {
 
 function downloadHeatmap(format) {
 
-    // =======================================
-    // ASK FOR FILE NAME
-    // =======================================
-
-    let fileName = prompt(
-        "Enter file Name:",
-        "OmicsStudio_Heatmap"
-    );
-
-    // Cancel
-    if (fileName === null) {
-        return;
-    }
-
-    // Remove extra spaces
-    fileName = fileName.trim();
-
-    // Empty name
-    if (!fileName) {
-        fileName = "OmicsStudio_Heatmap";
-    }
-
-    // Remove extension if user entered one
-    fileName = fileName.replace(
-        /\.(png|svg|pdf)$/i,
-        ""
-    );
-
-    // =======================================
-    // GET HEATMAP
-    // =======================================
-
-    const plot = document.getElementById("heatmapPlot");
+    const plot =
+        document.getElementById("heatmapPlot");
 
     if (!plot || !plot.data) {
         alert("Heatmap is not available.");
@@ -2416,36 +2385,64 @@ function downloadHeatmap(format) {
         "Download:",
         format,
         width,
-        height,
-        fileName
+        height
     );
 
     // =======================================
+// ASK FOR FILE NAME
+// =======================================
+
+let fileName = prompt(
+    "Enter file name:",
+    "OmicsStudio_Heatmap"
+);
+
+// Cancel
+if (fileName === null) {
+    return;
+}
+
+// Remove extra spaces
+fileName = fileName.trim();
+
+// Empty name
+if (!fileName) {
+    fileName = "OmicsStudio_Heatmap";
+}
+
+// Remove extension if user entered one
+fileName = fileName.replace(
+    /\.(png|svg|pdf)$/i,
+    ""
+);
+
+    // ===============================
     // PNG
-    // =======================================
+    // ===============================
 
     if (format === "png") {
 
-        Plotly.downloadImage(plot, {
+    Plotly.downloadImage(plot, {
 
-            format: "png",
+        format: "png",
 
-            filename: fileName,
+        filename: fileName,
 
-            width: width,
+        width: width,
 
-            height: height,
+        height: height,
 
-            scale: 4
+        scale: 4
 
-        });
+    });
 
-        return;
-    }
+    return;
+}
 
-    // =======================================
+
+    // ===============================
     // SVG
-    // =======================================
+    // ===============================
 
     if (format === "svg") {
 
@@ -2466,27 +2463,30 @@ function downloadHeatmap(format) {
         return;
     }
 
-    // =======================================
+
+    // ===============================
     // PDF
-    // =======================================
+    // ===============================
 
     if (format === "pdf") {
 
-        Plotly.toImage(plot, {
+    Plotly.toImage(plot, {
 
-            format: "png",
+        format: "png",
 
-            width: width,
+        width: width,
 
-            height: height,
+        height: height,
 
-            scale: 4
+        scale: 4
 
-        }).then(function(imageData) {
+    }).then(function(imageData) {
 
-            const jsPDF = window.jspdf.jsPDF;
+        const jsPDF =
+            window.jspdf.jsPDF;
 
-            const pdf = new jsPDF({
+        const pdf =
+            new jsPDF({
 
                 orientation:
                     width > height
@@ -2502,24 +2502,21 @@ function downloadHeatmap(format) {
 
             });
 
-            pdf.addImage(
-                imageData,
-                "PNG",
-                0,
-                0,
-                width,
-                height
-            );
+        pdf.addImage(
+            imageData,
+            "PNG",
+            0,
+            0,
+            width,
+            height
+        );
 
-            pdf.save(
-                fileName + ".pdf"
-            );
+        pdf.save ( fileName + ".pdf" );
 
-        });
+    });
 
-        return;
-    }
-
+    return;
+} 
 
 
 
