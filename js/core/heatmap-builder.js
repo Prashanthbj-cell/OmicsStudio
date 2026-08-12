@@ -2375,8 +2375,8 @@ function downloadHeatmap(format) {
 // =======================================
 
 let fileName = prompt(
-    "Enter file name:",
-    ""
+    "Enter file Name:",
+    "OmicsStudio"
 );
 
 // Cancel
