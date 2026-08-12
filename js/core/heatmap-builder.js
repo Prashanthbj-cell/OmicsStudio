@@ -2370,36 +2370,39 @@ if (heatmapTypeSelect) {
 
 function downloadHeatmap(format) {
 
-        // =======================================
-// ASK FOR FILE NAME
-// =======================================
+    // =======================================
+    // ASK FOR FILE NAME
+    // =======================================
 
-let fileName = prompt(
-    "Enter file Name:",
-    "OmicsStudio"
-);
+    let fileName = prompt(
+        "Enter file Name:",
+        "OmicsStudio_Heatmap"
+    );
 
-// Cancel
-if (fileName === null) {
-    return;
-}
+    // Cancel
+    if (fileName === null) {
+        return;
+    }
 
-// Remove extra spaces
-fileName = fileName.trim();
+    // Remove extra spaces
+    fileName = fileName.trim();
 
-// Empty name
-if (!fileName) {
-    fileName = "OmicsStudio_Heatmap";
-}
+    // Empty name
+    if (!fileName) {
+        fileName = "OmicsStudio_Heatmap";
+    }
 
-// Remove extension if user entered one
-fileName = fileName.replace(
-    /\.(png|svg|pdf)$/i,
-    ""
-);
+    // Remove extension if user entered one
+    fileName = fileName.replace(
+        /\.(png|svg|pdf)$/i,
+        ""
+    );
 
-    const plot =
-        document.getElementById("heatmapPlot");
+    // =======================================
+    // GET HEATMAP
+    // =======================================
+
+    const plot = document.getElementById("heatmapPlot");
 
     if (!plot || !plot.data) {
         alert("Heatmap is not available.");
@@ -2413,39 +2416,36 @@ fileName = fileName.replace(
         "Download:",
         format,
         width,
-        height
+        height,
+        fileName
     );
 
-
-
-
-    // ===============================
+    // =======================================
     // PNG
-    // ===============================
+    // =======================================
 
     if (format === "png") {
 
-    Plotly.downloadImage(plot, {
+        Plotly.downloadImage(plot, {
 
-        format: "png",
+            format: "png",
 
-        filename: "fileName",
+            filename: fileName,
 
-        width: width,
+            width: width,
 
-        height: height,
+            height: height,
 
-        scale: 4
+            scale: 4
 
-    });
+        });
 
-    return;
-}
+        return;
+    }
 
-
-    // ===============================
+    // =======================================
     // SVG
-    // ===============================
+    // =======================================
 
     if (format === "svg") {
 
@@ -2453,8 +2453,7 @@ fileName = fileName.replace(
 
             format: "svg",
 
-            filename:
-                "fileName",
+            filename: fileName,
 
             width: width,
 
@@ -2467,30 +2466,27 @@ fileName = fileName.replace(
         return;
     }
 
-
-    // ===============================
+    // =======================================
     // PDF
-    // ===============================
+    // =======================================
 
     if (format === "pdf") {
 
-    Plotly.toImage(plot, {
+        Plotly.toImage(plot, {
 
-        format: "png",
+            format: "png",
 
-        width: width,
+            width: width,
 
-        height: height,
+            height: height,
 
-        scale: 4
+            scale: 4
 
-    }).then(function(imageData) {
+        }).then(function(imageData) {
 
-        const jsPDF =
-            window.jspdf.jsPDF;
+            const jsPDF = window.jspdf.jsPDF;
 
-        const pdf =
-            new jsPDF({
+            const pdf = new jsPDF({
 
                 orientation:
                     width > height
@@ -2506,23 +2502,24 @@ fileName = fileName.replace(
 
             });
 
-        pdf.addImage(
-            imageData,
-            "PNG",
-            0,
-            0,
-            width,
-            height
-        );
+            pdf.addImage(
+                imageData,
+                "PNG",
+                0,
+                0,
+                width,
+                height
+            );
 
-        pdf.save(
-            "filename"
-        );
+            pdf.save(
+                fileName + ".pdf"
+            );
 
-    });
+        });
 
-    return;
-}   
+        return;
+    }
+}
 
 
 
